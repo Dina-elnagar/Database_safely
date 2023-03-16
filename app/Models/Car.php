@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\User;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Car extends Model // implements JWTSubject
+class Car extends Model  implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,17 +21,17 @@ class Car extends Model // implements JWTSubject
 
     public function user()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class,'user_cars');
     }
 
-    // public function getJWTIdentifier()
-    // {
-    //     return $this->getKey();
-    // }
 
-    // public function getJWTCustomClaims()
-    // {
-    //     return [];
-    // }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

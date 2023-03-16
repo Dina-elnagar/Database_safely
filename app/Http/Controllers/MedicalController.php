@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Medical_case;
 use Illuminate\Support\Facades\Validator;
 
+
 class MedicalController extends Controller
 {
 //     public function medicalinfo(Request $request)
@@ -43,8 +44,8 @@ public function medicalCase(Request $request)
     $validated = $request->validate([
         'blood_type' => 'required|string',
         'blood_pressure' => 'required|string',
-        'diabetes' => 'nullable|boolean',
-        'another_problem' => 'nullable|string',
+        'diabetes' => 'nullable',
+        'another_health_problem' => 'nullable|string',
     ]);
 
     $medicalInfo = Medical_case::create($validated);
@@ -52,5 +53,7 @@ public function medicalCase(Request $request)
     return response()->json(['message' => 'Medical case created',
      'data' => $medicalInfo]);
 }
+
+
 
 }

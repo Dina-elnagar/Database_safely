@@ -12,34 +12,12 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['userLogin', 'userRegister']]);
+        $this->middleware('auth:api', ['except' => ['car','userLogin', 'userRegister']]);
     }
 
     public function userLogin(Request $request)
     {
 
-        //  $request->validate([
-        //     'email' => 'required|string|email',
-        //     'password' => 'required|string',
-        // ]);
-        // $credentials = $request->only('email', 'password');
-
-        // $token = Auth::attempt($credentials);
-        // if (!$token ) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Unauthorized',
-        //     ], 401);
-        // }
-        // $User = Auth::User();
-        // return response()->json([
-        //         'status' => 'success',
-        //         'User' => $User,
-        //         'authorisation' => [
-        //             'token' => $token,
-        //             'type' => 'bearer',
-        //         ]
-        //     ]);
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -118,6 +96,15 @@ public function userRegister(Request $request){
         return Auth::guard('api');
     }
 
+    // public function userLogout()
+    // {
+    //     $this->guard()->logout();
+
+    //     return response()->json([
+    //         'message' => 'User successfully signed out',
+    //         'status' => 'true'
+    //     ]);
+    // }
 
 }
 

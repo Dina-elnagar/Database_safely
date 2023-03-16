@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\MedicalController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,11 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+   Route::post('car',[CarController::class,'carRegister']);
 
   Route::post('userLogin',[UserController::class,'userLogin']);
   Route::post('userRegister',[UserController::class,'userRegister']);
 
-  Route::post('CarRegister',[CarController::class,'CarRegister']);
 
   //Route::post('medicalinfo',[MedicalController::class,'medicalinfo']);
   Route::post('/medical-info', [MedicalController::class, 'medicalCase']);

@@ -54,7 +54,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function car()
     {
-        return $this->belongsToMany(Car::class);
+        return $this->belongsToMany(Car::class,'user_cars');
 
     }
 

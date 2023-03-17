@@ -22,12 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-   Route::post('car',[CarController::class,'carRegister']);
-
   Route::post('userLogin',[UserController::class,'userLogin']);
   Route::post('userRegister',[UserController::class,'userRegister']);
-
-
-  //Route::post('medicalinfo',[MedicalController::class,'medicalinfo']);
+  Route::get('show',[UserController::class,'show']);
   Route::post('/medical-info', [MedicalController::class, 'medicalCase']);
-
+  Route::post('car',[CarController::class,'carRegister']);
+Route::get('show-data',[UserController::class,'showEditData']);
+Route::put('edit-data',[UserController::class,'showEditData']);
+  Route::match(['get'], '/show-edit-data',
+  [UserController::class]);

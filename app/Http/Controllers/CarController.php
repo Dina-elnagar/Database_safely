@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Car;
 use App\Models\User;
+use App\Models\User_Car;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\QueryException;
+
 
 class CarController extends Controller
 {
@@ -15,21 +16,26 @@ class CarController extends Controller
 
     public function CarRegister(Request $request)
     {
-
         $validatedData = $request->validate([
             'plate_NO' => 'required',
             'model' => 'required',
             'color' => 'required',
         ]);
-        $carInfo = new Car;
-        $carInfo->plate_NO = $validatedData['plate_NO'];
-        $carInfo->model = $validatedData['model'];
-        $carInfo->color = $validatedData['color'];
-        $carInfo->save();
+
+        $car =Car::create([
+            'plate_NO' => $validatedData['plate_NO'],
+            'model' => $validatedData['model'],
+            'color' => $validatedData['color'],
+        ]);
+
+        User_Car::create([
+            'user_id' => Auth::user()->id,
+            'car_id' => $car->id,
+        ]);
 
         return response()->json([
             'message' => 'Car information created successfully',
-            'data' => $carInfo,
+            'data' => $car,
     ]);
 
 
@@ -39,14 +45,6 @@ class CarController extends Controller
 
 
 
-    public function ValidateData()
-    {
-        return request()->validate([
-            'plate_NO' => 'required',
-            'model' => 'required',
-            'color' => 'required'
-        ]);
-    }
 
     public function CarList()
     {
@@ -95,23 +93,5 @@ class CarController extends Controller
 
 
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'plate_NO' => 'required',
-            'model' => 'required',
-            'color' => 'required',
-        ]);
-
-        $carInfo = new Car;
-        $carInfo->plate_NO = $validatedData['plate_NO'];
-        $carInfo->model = $validatedData['model'];
-        $carInfo->color = $validatedData['color'];
-        $carInfo->save();
-
-        return response()->json([
-            'message' => 'Car information created successfully',
-            'data' => $carInfo,
-    ]);
-    }
+    
 }

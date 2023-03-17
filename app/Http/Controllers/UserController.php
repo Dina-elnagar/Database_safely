@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Medical_case;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\User_medical_case;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -106,6 +108,67 @@ public function userRegister(Request $request){
     //     ]);
     // }
 
+    public function show(){
+        $user = Auth::user();
+        return response()->json([
+            'message' => 'User successfully the data is here',
+            'status' => 'true',
+            'data' => $user
+        ]);
+    }
+
+    public function showEditData(Request $request)
+{
+    // Get the authenticated user
+    $user = Auth::user();
+
+    // Get the user's medical case
+    $medicalCase =$user->Medical_case;
+    
+
+    // Show data
+    if ($request->isMethod('get')) {
+        return response()->json([
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'address' => $user->address,
+            'blood_type' => $medicalCase->pluck( 'blood_type'),
+        ]);
+    }
+
+    // Edit data
+    if ($request->isMethod('put')) {
+        // Validate request data
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'blood_type' => 'required|string|max:3',
+        ]);
+  // Update user data
+    $
+  $user->update([
+    'first_name' => $validatedData['first_name'],
+    'last_name' => $validatedData['last_name'],
+    'address' => $validatedData['address'],
+   ]);
+
+// Update medical case data
+    if ($medicalCase) {
+    $medicalCase->update(['blood_type' => $validatedData['blood_type']]);
+    } else {
+    Medical_case::create([
+        'user_id' => $user->id,
+        'blood_type' => $validatedData['blood_type'],
+    ]);
+     }
+
+   return response()->json(['message' => '<EUGPSCoordinates> successfully updated.']);
+
+
+}
+
 }
 
 
+}

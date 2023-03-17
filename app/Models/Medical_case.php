@@ -14,4 +14,9 @@ class Medical_case extends Model
        'diabetes',
        'another_health_problem',
     ];
+
+    public function user()
+    {
+        return $this->belongsToMany(User::class,'user_medical_cases');
+    }
 }

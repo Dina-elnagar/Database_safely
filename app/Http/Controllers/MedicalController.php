@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Medical_case;
+use App\Models\User_medical_case;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -48,10 +49,28 @@ public function medicalCase(Request $request)
         'another_health_problem' => 'nullable|string',
     ]);
 
-    $medicalInfo = Medical_case::create($validated);
+    $medical = Medical_case::create([
+        'blood_type' => $validated['blood_type'],
+        'blood_pressure' => $validated['blood_pressure'],
+        'diabetes' => $validated['diabetes'],
+        'another_health_problem' => $validated['another_health_problem'],
+    ]);
+    User_medical_case::create([
+        'user_id' => Auth::user()->id,
+        'medical_case_id' => $medical->id,
+    ]);
 
-    return response()->json(['message' => 'Medical case created',
-     'data' => $medicalInfo]);
+    return response()->json([
+        'message' => 'Medical case created',
+        'data' => $medical,
+    ]);
+
+
+
+
+
+
+
 }
 
 

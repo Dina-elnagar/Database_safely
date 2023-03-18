@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\MedicalController;
+use App\Http\Controllers\RegisterController;
 
 
 /*
@@ -31,3 +32,4 @@ Route::get('show-data',[UserController::class,'showEditData']);
 Route::put('edit-data',[UserController::class,'showEditData']);
   Route::match(['get'], '/show-edit-data',
   [UserController::class]);
+  Route::post('Register',[RegisterController::class,'Register']);

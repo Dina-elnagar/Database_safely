@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\User_medical_case;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 
 class UserController extends Controller
@@ -44,7 +45,7 @@ class UserController extends Controller
 
 
 public function userRegister(Request $request){
-
+        //DB::beginTransaction();
          $validator = Validator::make($request->all(), [
          'first_name'       => 'required|string|min:3|max:255',
             'last_name'               => 'required|string|min:3|max:255',
@@ -124,7 +125,7 @@ public function userRegister(Request $request){
 
     // Get the user's medical case
     $medicalCase =$user->Medical_case;
-    
+
 
     // Show data
     if ($request->isMethod('get')) {

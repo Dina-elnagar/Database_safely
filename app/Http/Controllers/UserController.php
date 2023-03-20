@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\User_medical_case;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Emergency_contact;
 
 class UserController extends Controller
 {
@@ -109,14 +109,26 @@ public function userRegister(Request $request){
     //     ]);
     // }
 
-    public function show(){
-        $user = Auth::user();
-        return response()->json([
-            'message' => 'User successfully the data is here',
-            'status' => 'true',
-            'data' => $user
-        ]);
-    }
+    // public function show(){
+    //     $user = Auth::user();
+    //     return response()->json([
+    //         'message' => 'User successfully the data is here',
+    //         'status' => 'true',
+    //         'data' => $user
+    //     ]);
+    // }
+    public function show( )
+{
+   // return Emergency_contact::all();
+   $user = Auth::user();
+   $emergencycontact=$user->Emergency_contact;
+   return response()->json([
+       'message' => 'User successfully the data is here',
+       'status' => 'true',
+       'data' => $emergencycontact=Emergency_contact
+    ]);
+ 
+}
 
     public function showEditData(Request $request)
 {

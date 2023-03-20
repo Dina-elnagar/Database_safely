@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\User_medical_case;
 use App\Models\User_Car;
+use App\Models\Emergency_contact;
+use App\Models\User_emergency_contact;
+
+
+
 
 
 class RegisterController extends Controller
@@ -38,6 +43,9 @@ class RegisterController extends Controller
             'plate_NO' => 'required',
             'model' => 'required',
             'color' => 'required',
+            // contact
+            'contact_name'=> 'required',
+            'phone_number'=> 'required',
         ]);
 
 
@@ -66,7 +74,14 @@ class RegisterController extends Controller
             'blood_pressure' => $request->blood_pressure,
             'diabetes' => $request->diabetes,
             'another_health_problem' => $request->another_health_problem,
+            
          ]);
+
+         $emergencycontact= Emergency_contact::create([
+            'contact_name' => $request->contact_name,
+            'phone_number' => $request->phone_number,
+        ]);
+   
          User_Car::create([
             'user_id' => $user->id,
             'car_id' => $car->id,
@@ -76,7 +91,14 @@ class RegisterController extends Controller
             'medical_case_id' => $medicalInfo->id,
         ]);
 
-         DB::commit();
+        User_emergency_contact::create([
+                'user_id' => $user->id,
+                'emergency_contact_id' => $emergencycontact->id,
+            ]);
+       /** */
+              
+
+        DB::commit();
 
        });
 

@@ -112,19 +112,35 @@ public function userRegister(Request $request){
     //     ]);
     // }
 
-    public function show(){
-        $user = Auth::user();
-        $emergency_contact = $user->Emergency_contact;
-        $medical_case = $user->Medical_case;
-        $user_medical_case = $user->User_medical_case;
-        $user_emergency_contact = $user->User_emergency_contact;
+    public function userLogout()
+    {
+        $this->guard()->logout();
 
-        // return response()->json([
-        //     'message' => 'User successfully the data is here',
-        //     'status' => 'true',
-        //     'data' => $user
-        // ]);
+        return response()->json([
+            'message' => 'User successfully signed out',
+            'status' => 'true'
+        ]);
     }
+    // public function show(){
+    //     $user = Auth::user();
+    //     return response()->json([
+    //         'message' => 'User successfully the data is here',
+    //         'status' => 'true',
+    //         'data' => $user
+    //     ]);
+    // }
+    public function show( )
+{
+   // return Emergency_contact::all();
+   $user = Auth::user();
+   $emergencycontact=$user->Emergency_contact;
+   return response()->json([
+       'message' => 'User successfully the data is here',
+       'status' => 'true',
+       'data' => $emergencycontact=Emergency_contact
+    ]);
+
+}
 
     public function showEditData(Request $request)
 {

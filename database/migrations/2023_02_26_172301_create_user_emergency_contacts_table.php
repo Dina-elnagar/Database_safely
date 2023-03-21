@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained( 'users' )->cascadeOnDelete();
             $table->foreignId('emergency_contact_id')->constrained( 'emergency_contacts' )->cascadeOnDelete();
             $table->primary(['user_id', 'emergency_contact_id']);
+            $table->string('relationship')->nullable();
             $table->timestamps();
         });
     }

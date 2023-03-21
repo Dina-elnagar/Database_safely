@@ -9,8 +9,9 @@ use App\Models\User;
 use App\Models\User_medical_case;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Models\Emergency_contact;
-use App\Models\User_emergency_contact;
+
+
+
 
 
 
@@ -18,7 +19,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['car','userLogin', 'userRegister']]);
+        $this->middleware('auth:api', ['except' => ['userLogin', 'userRegister']]);
     }
 
     public function userLogin(Request $request)
@@ -47,7 +48,8 @@ class UserController extends Controller
 
 
 
-public function userRegister(Request $request){
+
+        public function userRegister(Request $request){
         //DB::beginTransaction();
          $validator = Validator::make($request->all(), [
          'first_name'       => 'required|string|min:3|max:255',
@@ -102,16 +104,6 @@ public function userRegister(Request $request){
         return Auth::guard('api');
     }
 
-    // public function userLogout()
-    // {
-    //     $this->guard()->logout();
-
-    //     return response()->json([
-    //         'message' => 'User successfully signed out',
-    //         'status' => 'true'
-    //     ]);
-    // }
-
     public function userLogout()
     {
         $this->guard()->logout();
@@ -121,79 +113,81 @@ public function userRegister(Request $request){
             'status' => 'true'
         ]);
     }
-    // public function show(){
-    //     $user = Auth::user();
-    //     return response()->json([
-    //         'message' => 'User successfully the data is here',
-    //         'status' => 'true',
-    //         'data' => $user
-    //     ]);
-    // }
-    public function show( )
-{
-   // return Emergency_contact::all();
-   $user = Auth::user();
-   $emergencycontact=$user->Emergency_contact;
-   return response()->json([
-       'message' => 'User successfully the data is here',
-       'status' => 'true',
-       'data' => $emergencycontact=Emergency_contact
-    ]);
 
-}
 
-    public function showEditData(Request $request)
+
+
+public function showData(Request $request)
 {
     // Get the authenticated user
     $user = Auth::user();
 
     // Get the user's medical case
     $medicalCase =$user->Medical_case;
-
-
-    // Show data
-    if ($request->isMethod('get')) {
-        return response()->json([
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'address' => $user->address,
-            'blood_type' => $medicalCase->pluck( 'blood_type'),
-        ]);
+    return response()->json([
+        'first_name' => $user->first_name,
+        'last_name' => $user->last_name,
+        'phone_number' => $user->phone_number,
+        'Address' => $user->Address,
+        'blood_type' => $medicalCase->pluck( 'blood_type'),
+    ]);
     }
 
-    // Edit data
-    if ($request->isMethod('put')) {
-        // Validate request data
+    public function editdata(Request $request)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+        // Get the user's medical case
+        $medicalCase =$user->Medical_case;
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
+            'Address' => 'required|string|max:255',
             'blood_type' => 'required|string|max:3',
         ]);
-  // Update user data
-    $
-  $user->update([
-    'first_name' => $validatedData['first_name'],
-    'last_name' => $validatedData['last_name'],
-    'address' => $validatedData['address'],
-   ]);
+        // Update user data
+        $user->update([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'Address' => $validatedData['Address'],
+        ]);
+        // Update medical case data
+        if ($medicalCase) {
+            $medicalCase->update(['blood_type' => $validatedData['blood_type']]);
+        } else {
+            Medical_case::create([
+                'user_id' => $user->id,
+                'blood_type' => $validatedData['blood_type'],
+            ]);
+        }
 
-// Update medical case data
-    if ($medicalCase) {
-    $medicalCase->update(['blood_type' => $validatedData['blood_type']]);
-    } else {
-    Medical_case::create([
-        'user_id' => $user->id,
-        'blood_type' => $validatedData['blood_type'],
-    ]);
-     }
+   }
 
-   return response()->json(['message' => '<EUGPSCoordinates> successfully updated.']);
 
+   public function updateData(Request $request)
+    {
+      //  Validate the request data
+        $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'Address' => 'required|string',
+            'blood_type' => 'required|string'
+        ]);
+
+        // Update the user data
+        $user = Auth::user();
+        $user-> update($request->only('first_name', 'last_name', 'Address','blood_type'));
+        // Update the medical case data
+         $medicalCase= $user->Medical_cas;
+        $medicalCase=  DB::update($request->only('blood_type'));
+      //  $medicalCase ->update($request->only('blood_type'));
+
+        return response()->json([
+            'message' => 'User data updated successfully',
+            'user' => $user,
+            'medical_case' => $medicalCase,
+        ]);
+    }
 
 }
 
-}
-
-
-}

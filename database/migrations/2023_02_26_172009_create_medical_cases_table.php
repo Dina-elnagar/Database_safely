@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('blood_type');
             $table->boolean('blood_pressure');
             $table->boolean('diabetes');
-            $table->string('another_health_problem');
+            $table->string('another_health_problem')->nullable();
             $table->timestamps();
         });
     }

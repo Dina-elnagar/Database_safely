@@ -10,7 +10,8 @@ class Emergency_contact extends Model
 
     protected $fillable =
         ['contact_name',
-         'phone_number'];
+         'phone_number_emergemncy'
+        ];
 
-   
+
 }

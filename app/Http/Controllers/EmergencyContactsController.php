@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Emergency_contact;
 use App\Models\User;
+use App\Models\User_emergency_contact;
+use App\Models\Emergency_message;
+use App\Models\User_emergency_message;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\InvoicePaid;
 
 class EmergencyContactsController extends Controller
-{ 
+{
     /* first time
     public function store(Request $request)
     {
@@ -42,7 +46,7 @@ class EmergencyContactsController extends Controller
                 'contact' => $contact,
                 'phone_number' => $phoneNumber,
             ],
-            
+
         ]);
     }
     }
@@ -99,22 +103,37 @@ public function show(EmergencyContact $emergencyContact)
 
 public function store(Request $request)
 {
-$validatedData = $request->validate([
-    'contact_name' => 'required',
-    'phone_number' => 'required',
-]);
+    $user = Auth::user();
 
+    $emergencycontact= Emergency_contact::create([
+        // 'contact_name' => $request->contact_name,
+       //  'phone_number_emergemncy' => $request->phone_number_emergemncy,
+        'first_name' => $request->first_name,
+        'last_name' => $request->last_name,
+        'phone_number' => $request->phone_number,
+    ]);
 
-$emergencycontact= Emergency_contact::create([
-    'contact_name' => $request->contact_name,
-    'phone_number' => $request->phone_number,
-]);
-// return response()->json(['message' => 'Emergency contact saved successfully.'   'data'=> $emergencycontact]);
+       User_emergency_contact::create([
+                'user_id' => $user->id,
+                'emergency_contact_id' => $emergencycontact->id,
+                'relationship' => $request->relationship,
+            ]);
 
 /** */
 }
 
 
 /** */
+public function handleUserAction(Request $request)
+{
+    $user = Auth::user();
+    $emergency_contacts = $user->emergency_contacts; // Get the emergency contacts for the user
+
+    foreach ($emergency_contacts as $contact) {
+        $contact->notify(new InvoicePaid($user));
+    }
+    return response()->json(['success' => true]);
+
+}
 
 }

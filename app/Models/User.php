@@ -8,6 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\Car;
+use App\Models\Medical_case;
+use App\Models\Emergency_contact;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -57,11 +61,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Car::class,'user_cars');
 
     }
-    public function Medical_case()
+    public function Medical_cases()
     {
-        return $this->belongsToMany(Medical_case::class,'user_medical_cases');
+        return $this->BelongsToMany(Medical_case::class,'user_medical_cases');
 
     }
+    public function emergency_contacts()
+    {
+    return $this->belongsToMany(Emergency_contact::class,'user_emergency_contacts');
+    }
+
 
     public function getJWTIdentifier()
     {

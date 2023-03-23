@@ -14,7 +14,7 @@ class CarController extends Controller
 {
 
 
-    public function CarRegister(Request $request)
+    public function CarStore(Request $request)
     {
         $validatedData = $request->validate([
             'plate_NO' => 'required',
@@ -56,18 +56,12 @@ class CarController extends Controller
         ]);
     }
 
-    public function CarEdit($id)
-    {
-        $car = Car::find($id);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'car edit',
-            'car' => $car,
-        ]);
-    }
+
 
     public function CarUpdate(Request $request, $id)
     {
+        $user=Auth::user()->id;
+        $car = Car::find($user);
         $car = Car::find($id);
         $car->plate_NO = $request->plate_NO;
         $car->model = $request->model;
@@ -80,9 +74,10 @@ class CarController extends Controller
         ]);
     }
 
-    public function CarDelete($id)
+    public function CarDelete()
     {
-        $car = Car::find($id);
+        $user=Auth::user()->id;
+        $car = Car::find($user);
         $car->delete();
         return response()->json([
             'status' => 'success',
@@ -90,8 +85,17 @@ class CarController extends Controller
         ]);
     }
 
+                  public function CarShow()
+                 {
+                  $user=Auth::user()->id;
+                   $car = Car::find($user);
+                    return response()->json([
+                    'status' => 'success',
+                    'message' => 'car show successfully',
+                    'car' => $car,
+                      ]);
+                 }
 
 
 
-    
 }

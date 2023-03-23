@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Emergency_message extends Model
 {
     use HasFactory;
+    protected $fillable =
+        [
+            'message',
+            'latitude',
+            'longitude',
+        ];
 }

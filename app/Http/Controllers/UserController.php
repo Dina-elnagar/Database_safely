@@ -115,79 +115,70 @@ class UserController extends Controller
     }
 
 
+          public function showData(Request $request)
+        {
+           // Get the authenticated user
+           $user = Auth::user();
+         $medicalCase = $user->Medical_cases->first();
+         if ($medicalCase) {
+          return response()->json([
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'phone_number' => $user->phone_number,
+            'Address' => $user->Address,
+            'blood_type' => $medicalCase->blood_type,
+            'another_health_problem' =>  $medicalCase->another_health_problem,
+          ]);
+          } else {
+          return response()->json(['message' => 'No related medical case found for user']);
+          }
+
+         }
 
 
-public function showData(Request $request)
-{
-    // Get the authenticated user
-    $user = Auth::user();
-
-    // Get the user's medical case
-    $medicalCase =$user->Medical_case;
-    return response()->json([
-        'first_name' => $user->first_name,
-        'last_name' => $user->last_name,
-        'phone_number' => $user->phone_number,
-        'Address' => $user->Address,
-        'blood_type' => $medicalCase->pluck( 'blood_type'),
-    ]);
-    }
-
-    public function editdata(Request $request)
-    {
-        // Get the authenticated user
-        $user = Auth::user();
-        // Get the user's medical case
-        $medicalCase =$user->Medical_case;
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'Address' => 'required|string|max:255',
-            'blood_type' => 'required|string|max:3',
-        ]);
-        // Update user data
-        $user->update([
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'],
-            'Address' => $validatedData['Address'],
-        ]);
-        // Update medical case data
-        if ($medicalCase) {
-            $medicalCase->update(['blood_type' => $validatedData['blood_type']]);
-        } else {
-            Medical_case::create([
-                'user_id' => $user->id,
-                'blood_type' => $validatedData['blood_type'],
-            ]);
-        }
-
-   }
-
-
-   public function updateData(Request $request)
+    public function updateData(Request $request)
     {
       //  Validate the request data
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'Address' => 'required|string',
-            'blood_type' => 'required|string'
+            'phone_number' => 'required',
+            'blood_type' => 'required|string',
+            'another_health_problem' => 'required|string',
         ]);
 
         // Update the user data
         $user = Auth::user();
-        $user-> update($request->only('first_name', 'last_name', 'Address','blood_type'));
+        //$user-> update($request->only('first_name', 'last_name', 'Address','blood_type'));
+        $user ->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'Address' => $request->Address,
+            'phone_number' => $request->phone_number,
+        ]);
         // Update the medical case data
-         $medicalCase= $user->Medical_cas;
-        $medicalCase=  DB::update($request->only('blood_type'));
-      //  $medicalCase ->update($request->only('blood_type'));
-
+        $medicalCaseData  = [
+            'blood_type' => $request->input('blood_type'),
+            'another_health_problem' => $request->input('another_health_problem')
+        ];
+        foreach ($user->Medical_cases as $Medical_case) {
+            $Medical_case->update([
+                'blood_type' => $request->input('blood_type'),
+                'another_health_problem' => $request->input('another_health_problem')
+            ]) ;
+        }
         return response()->json([
             'message' => 'User data updated successfully',
             'user' => $user,
-            'medical_case' => $medicalCase,
+            'medicalCase' => $medicalCaseData ,
         ]);
-    }
+       }
+
+
+
 
 }
+
+
 

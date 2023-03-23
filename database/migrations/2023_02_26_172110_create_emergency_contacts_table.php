@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('emergency_contacts', function (Blueprint $table) {
             $table->id();
-            $table->string('contact_name');
-            $table->integer('phone_number_emergemncy');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->text('phone_number')->unique();
             $table->timestamps();
         });
     }

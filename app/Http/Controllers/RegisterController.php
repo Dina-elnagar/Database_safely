@@ -44,9 +44,9 @@ class RegisterController extends Controller
             'model' => 'required',
             'color' => 'required',
             //emergency contact
-            'contact_name'=> 'required',
-            'phone_number'=> 'required',
-            'relationship'=> 'required',
+            // 'contact_name'=> 'required',
+            // 'phone_number'=> 'required',
+            // 'relationship'=> 'required',
         ]);
 
 
@@ -80,9 +80,11 @@ class RegisterController extends Controller
          ]);
             //emergency contact
          $emergencycontact= Emergency_contact::create([
-            'contact_name' => $request->contact_name,
-            'phone_number_emergemncy' => $request->phone_number_emergemncy,
-
+            // 'contact_name' => $request->contact_name,
+            // 'phone_number_emergemncy' => $request->phone_number_emergemncy,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone_number' => $request->phone_number,
         ]);
          // user medical data
          User_Car::create([
@@ -95,11 +97,11 @@ class RegisterController extends Controller
             'medical_case_id' => $medicalInfo->id,
         ]);
         // user emergency contact
-        User_emergency_contact::create([
-                'user_id' => $user->id,
-                'emergency_contact_id' => $emergencycontact->id,
-                'relationship' => $request->relationship,
-            ]);
+        // User_emergency_contact::create([
+        //         'user_id' => $user->id,
+        //         'emergency_contact_id' => $emergencycontact->id,
+        //         'relationship' => $request->relationship,
+        //     ]);
 
         DB::commit();
        });

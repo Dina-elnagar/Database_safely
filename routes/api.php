@@ -46,8 +46,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     Route::post('/user/action', [EmergencyContactsController::class, 'handleUserAction']);
 
   Route::post('store_emergency_contact', [EmergencyContactsController::class, 'store']);
+//  Route::post('eme', [EmergencyContactsController::class, 'save']);
 
 
-//  Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'show']);
+
+ Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'showw']);
+// Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'index']);
 
   //  Route::get('emergency-contacts-edit/{id}', [EmergencyContactsController::class, 'edit']);
+  Route::post('showw',[RegisterController::class,'test2']);
+

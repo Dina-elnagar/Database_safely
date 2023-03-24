@@ -92,10 +92,10 @@ class RegisterController extends Controller
             'car_id' => $car->id,
         ]);
         // user medical data
-        User_medical_case::create([
-            'user_id' => $user->id,
-            'medical_case_id' => $medicalInfo->id,
-        ]);
+      //  User_medical_case::create([
+       //     'user_id' => $user->id,
+        //    'medical_case_id' => $medicalInfo->id,
+       // ]);
         // user emergency contact
         // User_emergency_contact::create([
         //         'user_id' => $user->id,
@@ -113,5 +113,87 @@ class RegisterController extends Controller
 
 
 }
+public function index()
+{  $user=Auth::user()->id;
+    $emergencyContact = Emergency_contact::find($user);
+     return response()->json([
+     'status' => 'success',
+     'message' => 'car show successfully',
+     'car' => $emergencyContact,
+
+     ]);
+     
+    
+}
+public function test(){
+    $user=Auth::user()->id;
+    if (    $emergencyContact = Emergency_contact::find($user)    ) {
+        // code to be executed if condition is true
+        //  user emergency contact;
+
+         User_emergency_contact::create([
+                 'user_id' => $user->id,
+                 'emergency_contact_id' => $emergencycontact->id,
+                 'relationship' => $request->relationship,
+             ]);
+             /** */
+             User_medical_case::create([
+                'user_id' => $user->id,
+                'medical_case_id' => $medicalInfo->id,
+             ]);
+        echo "the user is validated" ;
+      } else {
+        // code to be executed if condition is false
+        echo "its empty !!!!!!" ;
+
+      }
+      
+
+
 
 }
+public function show($id)
+{
+    $user=Auth::user()->id;
+
+    $emergencyContact = Emergency_contact::where('id', $id)->first();
+    if ($emergencyContact) {
+        return response()->json([
+            'status' => 'success',
+            'data' => $emergencyContact
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Emergency contact not found'
+        ]);
+    }
+}
+public function test2(Request $request)
+{
+  $validatedData=  $request->validate([
+       
+        'phone_number' => 'required'
+
+    ]);
+
+    $emergency_contact = Emergency_contact::firstOrCreate($validatedData);
+    if (Auth::check()) {
+        $user = Auth::user();
+        DB::table('user_emergency_contacts')->insert([
+            'user_id' => $user->id,
+            'emergency_contact_id' => $emergency_contact->id,
+            'relationship' => $request->relationship,
+        ]);
+    }
+    return response()->json(['success' => true]);
+}
+}
+
+/*  user emergency contact
+         User_emergency_contact::create([
+                 'user_id' => $user->id,
+                 'emergency_contact_id' => $emergencycontact->id,
+                 'relationship' => $request->relationship,
+             ]);
+             /** */

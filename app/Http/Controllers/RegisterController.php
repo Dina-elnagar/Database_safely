@@ -171,23 +171,53 @@ public function show($id)
 }
 public function test2(Request $request)
 {
-  $validatedData=  $request->validate([
-       
+    $validatedData = $request->validate([
         'phone_number' => 'required'
-
     ]);
 
-    $emergency_contact = Emergency_contact::firstOrCreate($validatedData);
+    $emergencyContact = Emergency_contact::firstOrCreate($validatedData);
+
     if (Auth::check()) {
         $user = Auth::user();
         DB::table('user_emergency_contacts')->insert([
             'user_id' => $user->id,
-            'emergency_contact_id' => $emergency_contact->id,
+            'emergency_contact_id' => $emergencyContact->id,
             'relationship' => $request->relationship,
         ]);
-    }
+    } //        else{
+        //      return response()->json(['success' => false, 'message' => 'User is not authenticated.']);
+    //              }
+
     return response()->json(['success' => true]);
+    
+
 }
+
+// delete emergency contat 
+public function delete (Request $request)
+{
+    $validatedData = $request->validate([
+        'phone_number' => 'required'
+    ]);
+
+    $emergencyContact = Emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
+
+    if ($emergencyContact) {
+        // Delete the emergency contact
+        $emergencyContact->delete();
+
+        // Remove any associated user_emergency_contacts entries
+        DB::table('user_emergency_contacts')->where('emergency_contact_id', $emergencyContact->id)->delete();
+
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['error' => 'Emergency contact not found']);
+    }
+}
+
+
+
+
 }
 
 /*  user emergency contact

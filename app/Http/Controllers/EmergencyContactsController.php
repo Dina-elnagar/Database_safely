@@ -137,6 +137,8 @@ public function store(Request $request)
                 'emergency_contact_id' => $emergencycontact->id,
                 'relationship' => $request->relationship,
             ]);
+            return response()->json([ 'message' => 'emergencyContact added successfully',], 200);
+
 
 /** */
 }
@@ -211,4 +213,92 @@ public function showw(Request $request)
     return response()->json(['data' => $emergencyContact], 200);
 }
 
+public function update(Request $request, $id)
+    {
+        $user=Auth::user()->id;
+        $emergencyContact = Emergency_contact::find($user);
+        $emergencyContact = Emergency_contact::find($id);
+        $emergencyContact->first_name = $request->first_name;
+        $emergencyContact->last_name = $request->last_name;
+        $emergencyContact->phone_number = $request->phone_number;
+        $emergencyContact->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'emergencyContact updated successfully',
+            'emergencyContact' => $emergencyContact,
+        ]);
+    }
+
+
+//emergency contact delete 
+/* works for delete contact
+    public function delete (Request $request)
+{
+    $validatedData = $request->validate([
+        'phone_number' => 'required'
+    ]);
+
+
+    if (Auth::check()) {
+        $user = Auth::user();
+        $emergencyContact = Emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
+        $user->emergencyContact()->detach($emergencyContact->id);
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'emergencyContact delete successfully'
+    ]);
+    } 
+    
+    else {
+        return response()->json(['error' => 'Emergency contact not found']);
+    }
+    /** */
+
+    public function delete(Request $request)
+{
+    $validatedData = $request->validate([
+        'phone_number' => 'required'
+    ]);
+
+    $emergencyContact = Emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
+
+    if (!$emergencyContact) {
+        return response()->json(['success' => false, 'message' => 'Emergency contact not found'], 404);
+    }
+
+    if (Auth::check()) {
+        $user = Auth::user();
+        $user->user_emergency_contacts()->detach($emergencyContact->id);
+    }
+
+    return response()->json(['success' => true, 'message' => 'Emergency contact deleted from user']);
 }
+
+
+    public function get (Request $request)
+{
+    $validatedData = $request->validate([
+        'phone_number' => 'required'
+    ]);
+
+    $emergencyContact = Emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
+
+    if ($emergencyContact) {
+        // Delete the emergency contact
+        $emergencyContact->select();
+
+        // Remove any associated user_emergency_contacts entries
+      //  DB::table('user_emergency_contacts')->where('emergency_contact_id', $emergencyContact->id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'emergencyContact' => $emergencyContact,
+    ]);
+    } else {
+        return response()->json(['error' => 'Emergency contact not found']);
+    }
+}
+}
+
+

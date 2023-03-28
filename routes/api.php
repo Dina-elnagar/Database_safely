@@ -55,4 +55,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
   //  Route::get('emergency-contacts-edit/{id}', [EmergencyContactsController::class, 'edit']);
   Route::post('showw',[RegisterController::class,'test2']);
+  Route::put('emergency/{id}',[EmergencyContactsController::class,'update']);
+  Route::post('emergency-contact-delete',[EmergencyContactsController::class,'delete']);
+  Route::post('emergency-contact-get',[EmergencyContactsController::class,'get']);
+
+
+
+
 

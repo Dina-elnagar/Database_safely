@@ -12,10 +12,11 @@ use App\Models\Emergency_message;
 use App\Models\User_emergency_message;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\InvoicePaid;
+use Illuminate\Support\Facades\DB;
 
 class EmergencyContactsController extends Controller
 {
-    
+
     /* first time
     public function store(Request $request)
     {
@@ -62,7 +63,7 @@ class EmergencyContactsController extends Controller
 /*** */
 public function index()
 {
-     
+
  //  $contacts = Emergency_contact::all();
   //  return response()->json(['contacts' => $contacts]);
 
@@ -104,43 +105,72 @@ public function show(EmergencyContact $emergencyContact)
 
 public function save (Request $request){
 
-  //  $emergencyContact = EmergencyContact::find($id)
 
+   $user = Auth::user()->id;
+   $emergencyContact = Emergency_contact::find($user);
     // Check if the phone number is unique
   //  $existingContact = emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
-    if     ($emergencyContact = Emergency_contact::find($id))    {
-        // Phone number already exists, return the contact saved 
+    if     ($emergencyContact = Emergency_contact::find($user))    {
+        // Phone number already exists, return the contact saved
         User_emergency_contact::create([
             'user_id' => $user->id,
-           'emergency_contact_id' => $emergencycontact->id,
+           'emergency_contact_id' => $emergencyContact->id,
            'relationship' => $request->relationship,
        ]);
         return response()->json(['saved' => 'emergency contact saved'], 400);
-        
-       
+
+
     };
 }
+// public function store(Request $request)
+// {
+//     $user = Auth::user();
+//   //  $emergency_contacts= Emergency_contact($request->all());
+
+//     $emergencycontact= Emergency_contact::create([
+//         // 'contact_name' => $request->contact_name,
+//        //  'phone_number_emergemncy' => $request->phone_number_emergemncy,
+//         'first_name' => $request->first_name,
+//         'last_name' => $request->last_name,
+//         'phone_number' => $request->phone_number,
+//     ]);
+
+//        User_emergency_contact::create([
+//                 'user_id' => $user->id,
+//                 'emergency_contact_id' => $emergencycontact->id,
+//                 'relationship' => $request->relationship,
+//             ]);
+
+// /** */
+// }
+
 public function store(Request $request)
 {
-    $user = Auth::user();
+  $validatedData=  $request->validate([
 
-    $emergencycontact= Emergency_contact::create([
-        // 'contact_name' => $request->contact_name,
-       //  'phone_number_emergemncy' => $request->phone_number_emergemncy,
-        'first_name' => $request->first_name,
-        'last_name' => $request->last_name,
-        'phone_number' => $request->phone_number,
+        'phone_number' => 'required'
+
     ]);
 
-       User_emergency_contact::create([
-                'user_id' => $user->id,
-                'emergency_contact_id' => $emergencycontact->id,
-                'relationship' => $request->relationship,
-            ]);
-            return response()->json([ 'message' => 'emergencyContact added successfully',], 200);
+    //    User_emergency_contact::create([
+    //             'user_id' => $user->id,
+    //             'emergency_contact_id' => $emergencycontact->id,
+    //             'relationship' => $request->relationship,
+    //         ]);
+    //         return response()->json([ 'message' => 'emergencyContact added successfully',], 200);
 
 
 /** */
+    $emergency_contact = Emergency_contact::firstOrCreate($validatedData);
+    if (Auth::check()) {
+        $user = Auth::user();
+        DB::table('user_emergency_contacts')->insert([
+            'user_id' => $user->id,
+            'emergency_contact_id' => $emergency_contact->id,
+            'relationship' => $request->relationship,
+        ]);
+    }
+    return response()->json(['success' => true]);
 }
 
 
@@ -163,7 +193,7 @@ public function save (Request $request){
 // Check if the phone number is unique
 $existingContact = EmergencyContact::where('phone_number', $validatedData['phone_number'])->first();
 if ($existingContact) {
-    // Phone number already exists, return the contact saved 
+    // Phone number already exists, return the contact saved
     User_emergency_contact::create([
         'user_id' => $user->id,
        'emergency_contact_id' => $emergencycontact->id,
@@ -177,7 +207,7 @@ if ($existingContact) {
 /* Check if the phone number is unique
 $existingContact = EmergencyContact::where('phone_number', $validatedData['phone_number'])->first();
 if ($existingContact) {
-    // Phone number already exists, return the contact saved 
+    // Phone number already exists, return the contact saved
     User_emergency_contact::create([
         'user_id' => $user->id,
        'emergency_contact_id' => $emergencycontact->id,
@@ -187,12 +217,13 @@ if ($existingContact) {
     public function show(Request $request)
 {
        $user=Auth::user()->id;
-        $emergencyContact = Emergency_contact::find($phone_number);
+     //  $user=Auth::user()->phone_number;
+        $emergencyContact = Emergency_contact::find($user);
         return response()->json($emergencyContact);
         if (!$emergencyContact) {
             return response()->json(['message' => 'Emergency contact not found'], 404);
         }
-    
+
         /*
     if (!$emergencyContact) {
         return response()->json(['message' => 'Emergency contact not found'], 404);
@@ -202,11 +233,11 @@ if ($existingContact) {
 }
 public function showw(Request $request)
 {
-    $user = Auth::user();
+    $user = Auth::user()->id;
   //  $emergencyContact = $user->Emergency_contact->find();
-    $user = User::where('id', $id)->first();
+    $user = User::where('id', $user)->first();
 
-    $emergencyContact = Emergency_contact::find($id);
+    $emergencyContact = Emergency_contact::find($user);
     if (!$emergencyContact) {
         return response()->json(['message' => 'Emergency contact not found'], 404);
     }
@@ -230,7 +261,7 @@ public function update(Request $request, $id)
     }
 
 
-//emergency contact delete 
+//emergency contact delete
 /* works for delete contact
     public function delete (Request $request)
 {
@@ -243,13 +274,13 @@ public function update(Request $request, $id)
         $user = Auth::user();
         $emergencyContact = Emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
         $user->emergencyContact()->detach($emergencyContact->id);
-    
+
         return response()->json([
             'success' => true,
             'message' => 'emergencyContact delete successfully'
     ]);
-    } 
-    
+    }
+
     else {
         return response()->json(['error' => 'Emergency contact not found']);
     }
@@ -269,7 +300,7 @@ public function update(Request $request, $id)
 
     if (Auth::check()) {
         $user = Auth::user();
-        $user->user_emergency_contacts()->detach($emergencyContact->id);
+        // $user->user_emergency_contacts()->detach($emergencyContact->id);
     }
 
     return response()->json(['success' => true, 'message' => 'Emergency contact deleted from user']);

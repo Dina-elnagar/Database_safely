@@ -82,4 +82,14 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->phone_number;
+    }
+
+    // public function routeNotificationForMail($notification)
+    // {
+    //     return $this->email;
+    // }
 }

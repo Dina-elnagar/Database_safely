@@ -6,10 +6,16 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Messages\VonageMessage;
+
+
+
 
 class InvoicePaid extends Notification
 {
     use Queueable;
+    use Notifiable;
 
     /**
      * Create a new notification instance.
@@ -18,7 +24,8 @@ class InvoicePaid extends Notification
      */
     public function __construct()
     {
-        //
+       // $this->middleware('auth:api', ['except' => ['via', 'toVonage']]);
+
     }
 
     /**
@@ -29,8 +36,9 @@ class InvoicePaid extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail','broadcast','nexmo'];
+        return ['toMail'];
     }
+
 
     /**
      * Get the mail representation of the notification.
@@ -46,10 +54,11 @@ class InvoicePaid extends Notification
                     ->line('Thank you for using our application!');
     }
 
-//     public function routeNotificationForNexmo($notification)
-// {
-//     return $this->phone_number;
-// }
+    // public function toVonage($notifiable)
+    // {
+    //     return (new VonageMessage)
+    //                 ->content('Your SMS message content');
+    // }
 
     /**
      * Get the array representation of the notification.

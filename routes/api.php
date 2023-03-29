@@ -7,6 +7,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmergencyContactsController;
+use App\Http\Controllers\NotificationController;
 
 
 
@@ -52,6 +53,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
  Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'showw']);
 // Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'index']);
+  Route::post('/send-notification', [NotificationController::class, 'send']);
+//  Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'show']);
 
   //  Route::get('emergency-contacts-edit/{id}', [EmergencyContactsController::class, 'edit']);
   Route::post('showw',[RegisterController::class,'test2']);

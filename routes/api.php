@@ -52,5 +52,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     //notification routes
     // Route::post('/user/action', [EmergencyContactsController::class, 'handleUserAction']);
+//feedback route 
+Route::post('feedback',[UserController::class,'feedback']);
+
 
 

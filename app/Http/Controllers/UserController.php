@@ -175,10 +175,59 @@ class UserController extends Controller
         ]);
        }
 
+       public function feedback (Request $request)
+       {
+        
+    $user = Auth::user(); // Get the authenticated user
+    
+    // Validate the input data
+    $validator = Validator::make($request->all(), [
+        'phone_number' => 'required|string',
+        'feedback' => 'nullable|string|min:3|max:255',
+
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+/** */
+    // Check if the user with the specified phone number exists
+    $existingUser = User::where('phone_number', $request->input('phone_number'))->first();
+    if (!$existingUser) {
+        return response()->json([
+            'message' => 'User not found',
+        ], 404);
+    }
+
+    /*Check if the user with the specified phone number matches the authenticated user
+    if ($existingUser->id !== $user->id) {
+        return response()->json([
+            'message' => 'Unauthorized',
+        ], 401);
+    }
+/** */
+    // Update the user's information
+//    $existingUser->name = $request->input('name', $existingUser->name);
+// $existingUser->feedback = $request->input('feedback', $existingUser->feedback);
+DB::table('feedback')->insert([
+    'users_id' => $user->id,
+    'feedback' => $request->feedback,
+]);
 
 
+    $existingUser->save();
 
+    return response()->json([
+        'message' => 'thanks for your Feedback',
+
+    ], 200);
 }
+
+       }
+    
 
 
 

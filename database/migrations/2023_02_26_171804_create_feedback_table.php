@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->longtext('feedback');
             $table->foreignId('users_id')->constrained( 'users' )->cascadeOnDelete();
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('created_at');
         });
     }
+    
+    public $timestamps = false;
 
     /**
      * Reverse the migrations.

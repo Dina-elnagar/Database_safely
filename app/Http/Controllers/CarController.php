@@ -78,13 +78,16 @@ class CarController extends Controller
     {
         $user=Auth::user()->id;
         $car = Car::find($user);
-        $car->delete();
+        if($car->delete()){
+            User_Car::where('car_id',$car->id)->delete();
+        }
+
+       // $car->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'car deleted successfully',
         ]);
     }
-
                   public function CarShow()
                  {
                   $user=Auth::user()->id;

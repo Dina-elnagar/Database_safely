@@ -20,7 +20,7 @@ class Emergency_contact extends Model
         // ['contact_name',
         //  'phone_number_emergemncy'
         // ];
-        public function user()
+        public function users()
         {
             return $this->belongsToMany(User::class,'user_emergency_contacts');
         }

@@ -19,7 +19,7 @@ class Car extends Model  implements JWTSubject
          'color',
       ];
 
-    public function user()
+    public function users()
     {
         return $this->belongsToMany(User::class,'user_cars');
     }

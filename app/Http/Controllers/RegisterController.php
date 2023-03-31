@@ -91,11 +91,11 @@ class RegisterController extends Controller
             'user_id' => $user->id,
             'car_id' => $car->id,
         ]);
-        // user medical data
-      //  User_medical_case::create([
-       //     'user_id' => $user->id,
-        //    'medical_case_id' => $medicalInfo->id,
-       // ]);
+       // user medical data
+       User_medical_case::create([
+           'user_id' => $user->id,
+           'medical_case_id' => $medicalInfo->id,
+       ]);
         // user emergency contact
         // User_emergency_contact::create([
         //         'user_id' => $user->id,

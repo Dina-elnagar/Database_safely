@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function car()
+    public function cars()
     {
         return $this->belongsToMany(Car::class,'user_cars');
 
@@ -66,7 +66,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->BelongsToMany(Medical_case::class,'user_medical_cases');
 
     }
-    public function emergency_contacts()
+    public function emergencyContacts()
     {
     return $this->belongsToMany(Emergency_contact::class,'user_emergency_contacts');
     }

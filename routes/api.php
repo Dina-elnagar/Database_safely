@@ -8,9 +8,39 @@ use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmergencyContactsController;
 use App\Http\Controllers\NotificationController;
+use App\Notifications\EmergencyNotification;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Models\EmergencyContact;
 
+Route::post('/notification-response', function (Request $request) {
+    // Get the authenticated user.
+    $user = Auth::user();
 
+    // Check whether the user's response was positive or negative.
+    $response = $request->input('response');
+    if ($response == 'true') {
+        // Do nothing, the user is okay.
+      } else {
+        // Schedule an emergency notification to be sent in 1 minute.
+        $emergencyContacts = $user->emergencyContacts;
+        foreach ($emergencyContacts as $contact) {
+            Notification::route('sms', $contact->phone_number)
+                ->notify((new EmergencyNotification($user, $contact))->delay(now()->addMinute()));
+        }
+    }
 
+    // Return a response to the user.
+    return response()->json(['message' => 'Notification response recorded.']);
+});
+
+Route::get('/notify-emergency-contact', function () {
+    $user = App\Models\User::find(Auth::user()->id);
+    $emergencyContact = $user->emergencyContacts()->first();
+    $notification = new EmergencyNotification($user, $emergencyContact);
+    $user->notify($notification);
+    return 'Emergency notification sent.';
+});
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,8 +69,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  Route::post('/medical-info', [MedicalController::class, 'medicalCase']);
    //car routes
     Route::post('CarStore',[CarController::class,'CarStore']);
-    Route::get('car-list',[CarController::class,'carList']);
-    Route::put('CarUpdate/{id}',[CarController::class,'CarUpdate']);
+    Route::put('CarUpdate',[CarController::class,'CarUpdate']);
     Route::delete('carDelete',[CarController::class,'carDelete']);
     Route::get('carShow',[CarController::class,'carShow']);
 
@@ -56,4 +85,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('feedback',[UserController::class,'feedback']);
 
 
-
+Route::post('message', [EmergencyContactsController::class, 'messages']);

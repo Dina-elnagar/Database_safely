@@ -16,24 +16,25 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
-    public function send(Request $request)
-{
-    $user = Auth::user()->id;
-   // Log::debug('Recipient ID: ' . $request->input('recipient_id'));
+//     public function send(Request $request)
+// {
+//     $user = Auth::user()->id;
+//    // Log::debug('Recipient ID: ' . $request->input('recipient_id'));
 
-    $recipient = User::find($user);
+//     $recipient = User::find($user);
 
-    Log::debug('Recipient: ' . print_r($recipient, true));
+//     Log::debug('Recipient: ' . print_r($recipient, true));
 
-    if ($recipient) {
-        $recipient->notify(new InvoicePaid($request->input('data')));
+//     if ($recipient) {
+//         $recipient->notify(new InvoicePaid($request->input('data')));
 
-        return response()->json(['success' => true]);
-    } else {
-        return response()->json(['error' => 'Recipient not found'], 404);
+//         return response()->json(['success' => true]);
+//     } else {
+//         return response()->json(['error' => 'Recipient not found'], 404);
 
-  }
-}
+//   }
+// }
+
 
 
 }

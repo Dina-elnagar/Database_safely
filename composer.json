@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "laravel/vonage-notification-channel": "^3.2",
+        "twilio/sdk": "^7.0",
         "tymon/jwt-auth": "*",
         "vonage/client": "^4.0"
     },

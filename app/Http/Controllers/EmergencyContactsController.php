@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\InvoicePaid;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
+use Twilio\Rest\Client;
 
 class EmergencyContactsController extends Controller
 {
@@ -89,8 +90,32 @@ public function show(Request $request)
         return response()->json(['success' => true]);
 
     }
+    // public function messages(Request $request)
+    // {
+    //     $MessageBird = new \MessageBird\Client('ACCESS_KEY');
 
+    //     $Message = new \MessageBird\Objects\Message();
+    //     $Message->originator = 'MessageBird';
+    //     $Message->recipients = array(01113770021);
+    //     $Message->body = 'This is a test message.';
 
+    //     $MessageBird->messages->create($Message);
+    // }
+
+    public function messages(Request $request)
+     {
+
+      $client = app(Client::class);
+
+       $client->messages->create(
+          '+201113770021',
+      [
+        'from' => config('services.twilio.from'),
+        'body' => 'This is a test message.'
+      ]
+     );
+      return response()->json(['success' => true, 'message' => 'Message sent']);
+     }
 }
 
 

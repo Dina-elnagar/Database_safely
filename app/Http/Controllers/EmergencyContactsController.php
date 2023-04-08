@@ -102,20 +102,21 @@ public function show(Request $request)
     //     $MessageBird->messages->create($Message);
     // }
 
-    public function messages(Request $request)
-     {
+//     public function messages(Request $request)
+//      {
 
-      $client = app(Client::class);
+//       $client = app(Client::class);
 
-       $client->messages->create(
-          '+201113770021',
-      [
-        'from' => config('services.twilio.from'),
-        'body' => 'This is a test message.'
-      ]
-     );
-      return response()->json(['success' => true, 'message' => 'Message sent']);
-     }
+//        $client->messages->create(
+//           '+201113770021',
+//       [
+//         'from' => config('services.twilio.from'),
+//         'body' => 'This is a test message.'
+//       ]
+//      );
+//       return response()->json(['success' => true, 'message' => 'Message sent']);
+//      }
+// }
+
+
 }
-
-

@@ -63,5 +63,15 @@ return [
         ],
 
     ],
+    // config/broadcasting.php
+'channels' => [
+    'vonage' => [
+        'driver' => 'vonage',
+        'api_key' => env('58208d1b'),
+        'api_secret' => env('jUrg2SiYOiGlhwui'),
+        'sms_from' => env('58208d1b'),
+    ],
+],
+
 
 ];

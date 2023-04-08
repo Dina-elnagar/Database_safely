@@ -12,6 +12,8 @@ use App\Notifications\EmergencyNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Models\EmergencyContact;
+use App\Models\User;
+use Illuminate\Notifications\Notification as NotificationsNotification;
 
 Route::post('/notification-response', function (Request $request) {
     // Get the authenticated user.
@@ -81,8 +83,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     //notification routes
     // Route::post('/user/action', [EmergencyContactsController::class, 'handleUserAction']);
-//feedback route 
+//feedback route
 Route::post('feedback',[UserController::class,'feedback']);
 
 
-Route::post('message', [EmergencyContactsController::class, 'messages']);
+//Route::post('message', [EmergencyContactsController::class, 'messages']);
+Route::Get('SendSms', [NotificationController::class, 'SendSms']);
+
+Route::Post('sendEmergencyMessage', [NotificationController::class, 'sendEmergencyMessage']);
+Route::get('/send-emergency-notification', function () {
+    $user = Auth::user();
+    $emergencyContacts = $user->emergencyContacts;
+    if (!$emergencyContacts) {
+        return response()->json(['message' => 'Emergency contact not found'], 404);
+    }
+    foreach ($emergencyContacts as $emergencyContact) {
+        $emergencyContact->notify(new EmergencyNotification);
+    }
+    return response()->json([
+        'message' => 'Emergency notification sent successfully',
+    ]);
+});

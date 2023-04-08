@@ -9,22 +9,40 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\User;
 use Twilio\Rest\Client;
+use Illuminate\Notifications\Messages\VonageMessage;
 
 class EmergencyNotification extends Notification
 {
     use Queueable;
-    protected $user;
-    protected $emergencyContact;
+    // protected $user;
+    // protected $emergencyContact;
+    //protected $message;
+
+    // public function __construct($message)
+    // {
+    //     $this->message = $message;
+    // }
+    public function via($notifiable)
+    {
+        return ['vonage'];
+    }
+
+    public function toVonage($notifiable)
+    {
+        return (new VonageMessage)
+        ->content('This is an emergency notification.');
+           // ->content($this->message);
+    }
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $user, Emergency_contact $emergencyContact)
-    {
-        $this->user = $user;
-        $this->emergencyContact = $emergencyContact;
-    }
+    // public function __construct(User $user, Emergency_contact $emergencyContact)
+    // {
+    //     $this->user = $user;
+    //     $this->emergencyContact = $emergencyContact;
+    // }
 
     /**
      * Get the notification's delivery channels.
@@ -32,10 +50,10 @@ class EmergencyNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
-    {
-        return ['sms'];
-    }
+    // public function via($notifiable)
+    // {
+    //     return ['sms'];
+    // }
 
     /**
      * Get the mail representation of the notification.

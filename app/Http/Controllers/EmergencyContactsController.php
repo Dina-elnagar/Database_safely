@@ -19,7 +19,7 @@ use Twilio\Rest\Client;
 class EmergencyContactsController extends Controller
 {
 
-//*** */
+/*
 
 public function store(Request $request)
 {
@@ -41,6 +41,35 @@ public function store(Request $request)
 
 
 /** */
+
+public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'phone_number' => 'required|array',
+        'relationship' => 'required|array',
+        'phone_number.*' => 'required|string',
+        'relationship.*' => 'required|string'
+    ]);
+
+    if (Auth::check()) {
+        $user = Auth::user();
+
+        // Loop through each phone number and relationship and create or update the emergency contact
+        foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
+            $emergencyContact = Emergency_contact::firstOrCreate(['phone_number' => $phoneNumber]);
+            DB::table('user_emergency_contacts')->insert([
+                'user_id' => $user->id,
+                'emergency_contact_id' => $emergencyContact->id,
+                'relationship' => $validatedData['relationship'][$key],
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+    
+    return response()->json(['success' => false]);
+}
+
 
 
 public function show(Request $request)

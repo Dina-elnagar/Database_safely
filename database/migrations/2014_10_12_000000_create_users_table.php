@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('gender');
             $table->string('Address');
+            $table->string('device_token')->default('');
              $table->rememberToken();
              $table->timestamp('created_at')->useCurrent();
              $table->timestamp('updated_at')->useCurrent();

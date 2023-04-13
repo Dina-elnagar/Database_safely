@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
   
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-
   
 class NotificationController extends Controller
 {
@@ -26,8 +24,6 @@ class NotificationController extends Controller
      */
     public function sendNotification(Request $request)
     {
-        $user = Auth::user();
-
         $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
             
         $SERVER_API_KEY = env('FCM_SERVER_KEY');

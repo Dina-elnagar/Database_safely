@@ -47,6 +47,7 @@ class RegisterController extends Controller
             // 'contact_name'=> 'required',
             // 'phone_number'=> 'required',
             // 'relationship'=> 'required',
+            
         ]);
 
 

@@ -19,9 +19,120 @@ use Twilio\Rest\Client;
 class EmergencyContactsController extends Controller
 {
 
-/*
+
+
+//     public function store(Request $request)
+// {
+//     $validatedData = $request->validate([
+//         'phone_number' => 'required|array',
+//         'relationship' => 'required|array',
+//         'phone_number.*' => 'required|string',
+//         'relationship.*' => 'required|string'
+//     ]);
+
+//     if (Auth::check()) {
+//         $user = Auth::user();
+//         $success = true; // Initialize a success flag
+
+//         // Loop through each phone number and relationship and validate them
+//         foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
+//             // Validate phone number and relationship
+//             $validator = Validator::make([
+//                 'phone_number' => $phoneNumber,
+//                 'relationship' => $validatedData['relationship'][$key]
+//             ], [
+//                 'phone_number' => 'required|string',
+//                 'relationship' => 'required|string'
+//             ]);
+
+//             // If validation fails, set success flag to false and break the loop
+//             if ($validator->fails()) {
+//                 $success = false;
+//                 break;
+//             }
+//         }
+
+//         // If all validation passes, create or update the emergency contacts
+//         if ($success) {
+//             foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
+//                 $emergencyContact = Emergency_contact::firstOrCreate(['phone_number' => $phoneNumber]);
+//                 DB::table('user_emergency_contacts')->insert([
+//                     'user_id' => $user->id,
+//                     'emergency_contact_id' => $emergencyContact->id,
+//                     'relationship' => $validatedData['relationship'][$key],
+//                 ]);
+//             }
+
+//             return response()->json(['success' => true]);
+//         } else {
+//             return response()->json(['success' => false, 'message' => 'One or more provided phone numbers or relationships are invalid.']);
+//         }
+//     }
+
+//     return response()->json(['success' => false]);
+// }
+
 
 public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'phone_number' => 'required|array',
+        'relationship' => 'required|array',
+        'phone_number.*' => 'required|string',
+        'relationship.*' => 'required|string'
+    ]);
+
+    if (Auth::check()) {
+        $user = Auth::user();
+        $success = true; // Initialize a success flag
+
+        // Loop through each phone number and relationship and validate them
+        foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
+            // Validate phone number and relationship
+            $validator = Validator::make([
+                'phone_number' => $phoneNumber,
+                'relationship' => $validatedData['relationship'][$key]
+            ], [
+                'phone_number' => 'required|string',
+                'relationship' => 'required|string'
+            ]);
+
+            // If validation fails, set success flag to false and break the loop
+            if ($validator->fails()) {
+                $success = false;
+                break;
+            }
+        }
+
+        // If all validation passes, create or update the emergency contacts
+        if ($success) {
+            foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
+                $emergencyContact = Emergency_contact::where('phone_number', $phoneNumber)->first();
+                if ($emergencyContact) {
+                    // Update the relationship if emergency contact already exists
+                    DB::table('user_emergency_contacts')->updateOrInsert(
+                        [
+                            'user_id' => $user->id,
+                            'emergency_contact_id' => $emergencyContact->id
+                        ],
+                        [
+                            'relationship' => $validatedData['relationship'][$key]
+                        ]
+                    );
+                }
+            }
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'One or more provided phone numbers or relationships are invalid.']);
+        }
+    }
+
+    return response()->json(['success' => false]);
+}
+
+
+public function store_emergency_contact(Request $request)
 {
   $validatedData=  $request->validate([
         'phone_number' => 'required'
@@ -40,35 +151,35 @@ public function store(Request $request)
 }
 
 
-/** */
 
-public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'phone_number' => 'required|array',
-        'relationship' => 'required|array',
-        'phone_number.*' => 'required|string',
-        'relationship.*' => 'required|string'
-    ]);
 
-    if (Auth::check()) {
-        $user = Auth::user();
+// public function store(Request $request)
+// {
+//     $validatedData = $request->validate([
+//         'phone_number' => 'required|array',
+//         'relationship' => 'required|array',
+//         'phone_number.*' => 'required|string',
+//         'relationship.*' => 'required|string'
+//     ]);
 
-        // Loop through each phone number and relationship and create or update the emergency contact
-        foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
-            $emergencyContact = Emergency_contact::firstOrCreate(['phone_number' => $phoneNumber]);
-            DB::table('user_emergency_contacts')->insert([
-                'user_id' => $user->id,
-                'emergency_contact_id' => $emergencyContact->id,
-                'relationship' => $validatedData['relationship'][$key],
-            ]);
-        }
+//     if (Auth::check()) {
+//         $user = Auth::user();
 
-        return response()->json(['success' => true]);
-    }
-    
-    return response()->json(['success' => false]);
-}
+//         // Loop through each phone number and relationship and create or update the emergency contact
+//         foreach ($validatedData['phone_number'] as $key => $phoneNumber) {
+//             $emergencyContact = Emergency_contact::firstOrCreate(['phone_number' => $phoneNumber]);
+//             DB::table('user_emergency_contacts')->insert([
+//                 'user_id' => $user->id,
+//                 'emergency_contact_id' => $emergencyContact->id,
+//                 'relationship' => $validatedData['relationship'][$key],
+//             ]);
+//         }
+
+//         return response()->json(['success' => true]);
+//     }
+
+//     return response()->json(['success' => false]);
+// }
 
 
 

@@ -77,10 +77,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
    //emergency contacts routes
-  Route::post('store_emergency_contact', [EmergencyContactsController::class, 'store_emergency_contact']);
+   Route::post('enter_emergency_contact', [EmergencyContactsController::class, 'store']); //store array of emergency contacts
+  Route::post('store_emergency_contact', [EmergencyContactsController::class, 'store_emergency_contact']); //store one emergency contact
   Route::delete('emergency-contact-delete',[EmergencyContactsController::class,'delete']);
   Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'show']);
-  Route::post('enter_emergency_contact', [EmergencyContactsController::class, 'store']);
 
     //notification routes
     // Route::post('/user/action', [EmergencyContactsController::class, 'handleUserAction']);

@@ -42,6 +42,11 @@ class UserController extends Controller
             ], 401);
         }
         return $this->createNewToken($token);
+        return response()->json([
+            'message' => 'login sucessfully',
+            'status' => 'true',
+            'user' => Auth::guard('api')->user()
+        ]);
 
 
         }
@@ -143,8 +148,8 @@ class UserController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'Address' => 'required|string',
-            'phone_number' => 'required',
-            'blood_type' => 'required|string',
+           // 'phone_number' => 'required',
+           // 'blood_type' => 'required|string',
             'another_health_problem' => 'required|string',
         ]);
 
@@ -155,16 +160,16 @@ class UserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'Address' => $request->Address,
-            'phone_number' => $request->phone_number,
+          //  'phone_number' => $request->phone_number,
         ]);
         // Update the medical case data
         $medicalCaseData  = [
-            'blood_type' => $request->input('blood_type'),
+         //   'blood_type' => $request->input('blood_type'),
             'another_health_problem' => $request->input('another_health_problem')
         ];
         foreach ($user->Medical_cases as $Medical_case) {
             $Medical_case->update([
-                'blood_type' => $request->input('blood_type'),
+             //   'blood_type' => $request->input('blood_type'),
                 'another_health_problem' => $request->input('another_health_problem')
             ]) ;
         }
@@ -177,9 +182,9 @@ class UserController extends Controller
 
        public function feedback (Request $request)
        {
-        
+
     $user = Auth::user(); // Get the authenticated user
-    
+
     // Validate the input data
     $validator = Validator::make($request->all(), [
         'phone_number' => 'required|string',
@@ -227,7 +232,7 @@ DB::table('feedback')->insert([
 }
 
        }
-    
+
 
 
 

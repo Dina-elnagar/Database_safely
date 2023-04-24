@@ -80,7 +80,7 @@ public function store(Request $request)
         'phone_numbers.*' => 'required|string',
         'relationships' => 'required|array',
         'relationships.*' => 'required|string',
-        
+
     ]);
 
 
@@ -189,6 +189,11 @@ public function show(Request $request)
     if (!$emergency_contacts) {
         return response()->json(['message' => 'Emergency contact not found'], 404);
     }
+    $emergency_contacts = $emergency_contacts->get();
+
+    if ($emergency_contacts->isEmpty()) {
+        return response()->json(['message' => 'No emergency contacts found for this user'], 404);
+    }
     return response()->json(['data' => $emergency_contacts], 200);
 }
 
@@ -216,44 +221,6 @@ public function show(Request $request)
         return response()->json(['success' => true, 'message' => 'Emergency contact deleted from user', 'emergencyContact' => $emergencyContact]);
     }
 
-    public function handleUserAction(Request $request)
-    {
-        $user = Auth::user();
-        $emergency_contacts = $user->emergency_contacts; // Get the emergency contacts for the user
-
-        foreach ($emergency_contacts as $contact) {
-            $contact->notify(new InvoicePaid($user));
-        }
-        return response()->json(['success' => true]);
-
-    }
-    // public function messages(Request $request)
-    // {
-    //     $MessageBird = new \MessageBird\Client('ACCESS_KEY');
-
-    //     $Message = new \MessageBird\Objects\Message();
-    //     $Message->originator = 'MessageBird';
-    //     $Message->recipients = array(01113770021);
-    //     $Message->body = 'This is a test message.';
-
-    //     $MessageBird->messages->create($Message);
-    // }
-
-//     public function messages(Request $request)
-//      {
-
-//       $client = app(Client::class);
-
-//        $client->messages->create(
-//           '+201113770021',
-//       [
-//         'from' => config('services.twilio.from'),
-//         'body' => 'This is a test message.'
-//       ]
-//      );
-//       return response()->json(['success' => true, 'message' => 'Message sent']);
-//      }
-// }
 
 
 }

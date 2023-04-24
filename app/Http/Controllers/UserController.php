@@ -46,7 +46,7 @@ class UserController extends Controller
             'message' => 'login sucessfully',
             'status' => 'true',
             'user' => Auth::guard('api')->user()
-        ]);
+        ],200);
 
 
         }
@@ -177,7 +177,7 @@ class UserController extends Controller
             'message' => 'User data updated successfully',
             'user' => $user,
             'medicalCase' => $medicalCaseData ,
-        ]);
+        ],200);
        }
 
        public function feedback (Request $request)

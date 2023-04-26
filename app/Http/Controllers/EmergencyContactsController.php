@@ -183,19 +183,15 @@ public function store_emergency_contact(Request $request)
 public function show(Request $request)
 {
     $user = Auth::user();
+    $emergencyContacts = $user->emergencyContacts;
 
-   $emergency_contacts= $user->emergency_contacts;
-
-    if (!$emergency_contacts) {
-        return response()->json(['message' => 'Emergency contact not found'], 404);
-    }
-    $emergency_contacts = $emergency_contacts->get();
-
-    if ($emergency_contacts->isEmpty()) {
-        return response()->json(['message' => 'No emergency contacts found for this user'], 404);
-    }
-    return response()->json(['data' => $emergency_contacts], 200);
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Emergency contact shown successfully',
+        'emergency_contact' => $emergencyContacts,
+    ]);
 }
+
 
 
 

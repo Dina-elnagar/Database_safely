@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
    Route::post('enter_emergency_contact', [EmergencyContactsController::class, 'store']); //store array of emergency contacts
   Route::post('store_emergency_contact', [EmergencyContactsController::class, 'store_emergency_contact']); //store one emergency contact
   Route::delete('emergency-contact-delete',[EmergencyContactsController::class,'delete']);
-  Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'show']);
+  Route::get('s', [EmergencyContactsController::class, 'show']);
 
   
 Route::post('feedback',[UserController::class,'feedback']);

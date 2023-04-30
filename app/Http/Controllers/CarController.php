@@ -23,7 +23,8 @@ class CarController extends Controller
         ]);
 
         $car = Car::where('plate_NO', $validatedData['plate_NO'])->first();
-
+        if (Auth::check()) {
+            $user = Auth::user();
         if ($car) {
             User_Car::create([
                 'user_id' => Auth::user()->id,
@@ -41,11 +42,16 @@ class CarController extends Controller
                 'car_id' => $car->id,
             ]);
         }
-
+            return response()->json([
+                'message' => 'Car information created successfully',
+                'data' => $car,
+            ],200);
+        }
+    else{
         return response()->json([
-            'message' => 'Car information created successfully',
-            'data' => $car,
-        ]);
+            'message' => 'you are not logged in',
+        ],401);
+    }
     }
 
 
@@ -104,7 +110,7 @@ class CarController extends Controller
         'status' => 'success',
         'message' => 'Car updated successfully',
         'car' => $car,
-    ]);
+    ],200);
 }
 
 

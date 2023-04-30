@@ -12,6 +12,8 @@ use App\Models\Car;
 use App\Models\Medical_case;
 use App\Models\Emergency_contact;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Http\Controllers\JWTAuth;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -31,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
         'confirm_password',
         'date_of_birth',
         'gender',
-        'Address',        
+        'Address',
 
 
     ];
@@ -84,13 +86,24 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    public function routeNotificationForVonage($notification)
-    {
-        return $this->phone_number;
-    }
-
-    // public function routeNotificationForMail($notification)
+    // public function routeNotificationForVonage($notification)
     // {
-    //     return $this->email;
+    //     return $this->phone_number;
     // }
+    public static function checkToken($token){
+        if($token->token){
+            return true;
+        }
+        return false;
+    }
+    public static function getCurrentUser($request){
+        if(!User::checkToken($request)){
+            return response()->json([
+             'message' => 'Token is required'
+            ],422);
+        }
+
+        $user = JWTAuth::parseToken()->authenticate();
+        return $user;
+     }
 }

@@ -132,19 +132,25 @@ public function store(Request $request)
 public function store_emergency_contact(Request $request)
 {
   $validatedData=  $request->validate([
+
         'phone_number' => 'required'
     ]);
-    $emergency_contact = Emergency_contact::firstOrCreate($validatedData);
-    if (Auth::check()) {
+  //  $emergency_contact = Emergency_contact::firstOrCreate($validatedData);
+  $emergencyContact = Emergency_contact::where('phone_number', $validatedData['phone_number'])->first();
+ if($emergencyContact == null){
+   // $emergency_contact = Emergency_contact::create($validatedData);
+   response()->json(['success' => false]);
+}
+  if (Auth::check()) {
         $user = Auth::user();
         DB::table('user_emergency_contacts')->insert([
             'user_id' => $user->id,
-            'emergency_contact_id' => $emergency_contact->id,
+            'emergency_contact_id' => $emergencyContact->id,
             'relationship' => $request->relationship,
         ]);
         return response()->json(['success' => true]);
     }
-    return response()->json(['success' => false]);
+    return response('false.2', 401);
 }
 
 

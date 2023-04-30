@@ -9,9 +9,9 @@ use App\Models\User;
 use App\Models\User_medical_case;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
-
-
+use App\Http\Controllers\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Http\Controllers\Closure;
 
 
 
@@ -87,6 +87,26 @@ class UserController extends Controller
             'token' => $token,
         ], 201);
 
+}
+public function login(Request $request)
+{
+
+    $input = $request->only('email', 'password');
+    $jwt_token = null;
+    if (!$jwt_token = JWTAuth::attempt($input)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid Email or Password',
+        ], 401);
+    }
+    // get the user
+    $user = Auth::user();
+
+    return response()->json([
+        'success' => true,
+        'token' => $jwt_token,
+        'user' => $user
+    ]);
 }
 
 
@@ -231,7 +251,22 @@ DB::table('feedback')->insert([
     ], 200);
 }
 
+public function handle(Request $request, Closure $next)
+{
+    $token = $request->bearerToken();
+    if (!$token) {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    if (!Auth::guard('api')->check()) {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    return $next($request);
+}
        }
+
+
 
 
 

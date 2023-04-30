@@ -20,7 +20,7 @@ use App\Models\User_emergency_contact;
 
 class RegisterController extends Controller
 {
-    public function Register(Request $request){
+    public function  Register(Request $request){
 
        //  $validator = Validator::make($request->all(), [
        $request->validate([
@@ -47,11 +47,11 @@ class RegisterController extends Controller
             // 'contact_name'=> 'required',
             // 'phone_number'=> 'required',
             // 'relationship'=> 'required',
-            
+
         ]);
 
 
-        DB::transaction(function () use ($request){
+    $register=    DB::transaction(function () use ($request){
           //user data
         $user = User::create([
            'first_name' => $request->first_name,
@@ -105,19 +105,23 @@ class RegisterController extends Controller
         //     ]);
 
         DB::commit();
+        return $user;
        });
+    // Generate token
+   // $token = $this->generateToken($register);
+   // $token = $register->createToken('auth-token')->plainTextToken;
 
-       return response()->json([
+    return response()->json([
         'message' => 'User successfully registered',
-
-    ], 201);
-
+      //  'token' => $token
+    ], 200);
 
 }
 
-
-
-
+//   private function generateToken($user)
+//     {
+//         return $user->createToken('auth-token')->plainTextToken;
+//     }
 
 
 }

@@ -57,9 +57,15 @@ Route::get('/notify-emergency-contact', function () {
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Route::middleware('auth:api')->group(function () {
+//     // your protected routes here
+//   Route::post('Register',[RegisterController::class,'Register']);
+
+// });
+Route::post('Register',[RegisterController::class,'Register']);
 
 
-  Route::post('Register',[RegisterController::class,'Register']);
+  Route::post('login',[UserController::class,'login']);
 
   Route::post('userLogin',[UserController::class,'userLogin']);
  // Route::post('userRegister',[UserController::class,'userRegister']);
@@ -70,7 +76,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   //medical routes
  Route::post('/medical-info', [MedicalController::class, 'medicalCase']);
    //car routes
-    Route::post('CarStore',[CarController::class,'CarStore']);
+    Route::post('CarStore',[CarController::class,'CarStore'])->middleware('auth');
     Route::put('CarUpdate',[CarController::class,'CarUpdate']);
     Route::delete('carDelete',[CarController::class,'carDelete']);
     Route::get('carShow',[CarController::class,'carShow']);
@@ -82,7 +88,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   Route::delete('emergency-contact-delete',[EmergencyContactsController::class,'delete']);
   Route::get('s', [EmergencyContactsController::class, 'show']);
 
-  
+
 Route::post('feedback',[UserController::class,'feedback']);
 
 
@@ -103,3 +109,6 @@ Route::get('/send-emergency-notification', function () {
         'message' => 'Emergency notification sent successfully',
     ]);
 });
+// Route::group(['middleware' => 'auth:api'], function () {
+//     Route::post('/CarStore', [CarController::class, 'CarStore']);
+// });

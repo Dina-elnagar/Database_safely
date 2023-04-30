@@ -62,56 +62,56 @@ class CarController extends Controller
 
 
 
-    // public function CarUpdate(Request $request, $id)
-    // {
-    //     $user=Auth::user()->id;
-    //     $car = Car::find($user);
-    //     $car = Car::find($id);
-    //     $car->plate_NO = $request->plate_NO;
-    //     $car->model = $request->model;
-    //     $car->color = $request->color;
-    //     $car->save();
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'car updated successfully',
-    //         'car' => $car,
-    //     ]);
-    // }
-
-
-
-    public function CarUpdate(Request $request)
-{
-    $validatedData = $request->validate([
-        'plate_NO' => 'required',
-        'model' => 'required',
-        'color' => 'required',
-    ]);
-
-    $user = Auth::user();
-    $car = Car::where('plate_NO', $request->plate_NO)->first();
-
-    if (!$car) {
-        $car = Car::create([
-            'plate_NO' => $validatedData['plate_NO'],
-            'model' => $validatedData['model'],
-            'color' => $validatedData['color'],
-        ]);
-    } else {
-        $car->plate_NO = $validatedData['plate_NO'];
-        $car->model = $validatedData['model'];
-        $car->color = $validatedData['color'];
+    public function CarUpdate(Request $request, $id)
+    {
+        $user=Auth::user()->id;
+        $car = Car::find($user);
+        $car = Car::find($id);
+        $car->plate_NO = $request->plate_NO;
+        $car->model = $request->model;
+        $car->color = $request->color;
         $car->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'car updated successfully',
+            'car' => $car,
+        ]);
     }
 
-    $user->cars()->syncWithoutDetaching($car->id);
 
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Car updated successfully',
-        'car' => $car,
-    ],200);
-}
+
+//     public function CarUpdate(Request $request)
+// {
+//     $validatedData = $request->validate([
+//         'plate_NO' => 'required',
+//         'model' => 'required',
+//         'color' => 'required',
+//     ]);
+
+//     $user = Auth::user();
+//     $car = Car::where('plate_NO', $request->plate_NO)->first();
+
+//     if (!$car) {
+//         $car = Car::create([
+//             'plate_NO' => $validatedData['plate_NO'],
+//             'model' => $validatedData['model'],
+//             'color' => $validatedData['color'],
+//         ]);
+//     } else {
+//         $car->plate_NO = $validatedData['plate_NO'];
+//         $car->model = $validatedData['model'];
+//         $car->color = $validatedData['color'];
+//         $car->save();
+//     }
+
+//     $user->cars()->syncWithoutDetaching($car->id);
+
+//     return response()->json([
+//         'status' => 'success',
+//         'message' => 'Car updated successfully',
+//         'car' => $car,
+//     ],200);
+// }
 
 
     // public function CarDelete()

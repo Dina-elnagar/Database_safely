@@ -57,15 +57,10 @@ Route::get('/notify-emergency-contact', function () {
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::middleware('auth:api')->group(function () {
-//     // your protected routes here
-//   Route::post('Register',[RegisterController::class,'Register']);
 
-// });
-Route::post('Register',[RegisterController::class,'Register']);
+Route::post('Register',[RegisterController::class,'Register']);//->middleware('auth');
 
 
-  Route::post('login',[UserController::class,'login']);
 
   Route::post('userLogin',[UserController::class,'userLogin']);
  // Route::post('userRegister',[UserController::class,'userRegister']);
@@ -77,7 +72,7 @@ Route::post('Register',[RegisterController::class,'Register']);
  Route::post('/medical-info', [MedicalController::class, 'medicalCase']);
    //car routes
     Route::post('CarStore',[CarController::class,'CarStore'])->middleware('auth');
-    Route::put('CarUpdate',[CarController::class,'CarUpdate']);
+    Route::put('CarUpdate/{id}',[CarController::class,'CarUpdate']);
     Route::delete('carDelete',[CarController::class,'carDelete']);
     Route::get('carShow',[CarController::class,'carShow']);
 
@@ -86,12 +81,12 @@ Route::post('Register',[RegisterController::class,'Register']);
    Route::post('enter_emergency_contact', [EmergencyContactsController::class, 'store']); //store array of emergency contacts
   Route::post('store_emergency_contact', [EmergencyContactsController::class, 'store_emergency_contact']); //store one emergency contact
   Route::delete('emergency-contact-delete',[EmergencyContactsController::class,'delete']);
-  Route::get('s', [EmergencyContactsController::class, 'show']);
+  Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'show']);
 
-
+//feedback routes
 Route::post('feedback',[UserController::class,'feedback']);
 
-
+//notification routes
 //Route::post('message', [EmergencyContactsController::class, 'messages']);
 Route::Get('SendSms', [NotificationController::class, 'SendSms']);
 
@@ -109,6 +104,4 @@ Route::get('/send-emergency-notification', function () {
         'message' => 'Emergency notification sent successfully',
     ]);
 });
-// Route::group(['middleware' => 'auth:api'], function () {
-//     Route::post('/CarStore', [CarController::class, 'CarStore']);
-// });
+

@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use App\Models\Emergency_contact;
 use App\Models\User;
 use App\Models\User_emergency_contact;
 use App\Models\Emergency_message;
 use App\Models\User_emergency_message;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\InvoicePaid;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Builder;
-use Twilio\Rest\Client;
+
 
 class EmergencyContactsController extends Controller
 {
@@ -132,7 +129,6 @@ public function store(Request $request)
 public function store_emergency_contact(Request $request)
 {
   $validatedData=  $request->validate([
-
         'phone_number' => 'required'
     ]);
   //  $emergency_contact = Emergency_contact::firstOrCreate($validatedData);

@@ -13,17 +13,15 @@ use App\Models\User_medical_case;
 use App\Models\User_Car;
 use App\Models\Emergency_contact;
 use App\Models\User_emergency_contact;
-
+use Laravel\Sanctum\HasApiTokens;
 
 
 
 
 class RegisterController extends Controller
-{
+ {
     public function  Register(Request $request){
-
-       //  $validator = Validator::make($request->all(), [
-       $request->validate([
+          $request->validate([
         //user data
          'first_name'       => 'required|string|min:3|max:255',
             'last_name'               => 'required|string|min:3|max:255',
@@ -34,15 +32,18 @@ class RegisterController extends Controller
             'date_of_birth'          => 'required',
             'gender'            => 'required',
             'Address'           => 'required|string',
+
             //medical data
             'blood_type' => 'required|string',
             'blood_pressure' => 'required|string',
             'diabetes' => 'nullable',
             'another_health_problem' => 'nullable',
+
             //car data
             'plate_NO' => 'required',
             'model' => 'required',
             'color' => 'required',
+
             //emergency contact
             // 'contact_name'=> 'required',
             // 'phone_number'=> 'required',
@@ -105,24 +106,11 @@ class RegisterController extends Controller
         //     ]);
 
         DB::commit();
-        return $user;
        });
-    // Generate token
-   // $token = $this->generateToken($register);
-   // $token = $register->createToken('auth-token')->plainTextToken;
 
     return response()->json([
-        'message' => 'User successfully registered',
-      //  'token' => $token
-    ], 200);
+     'message' => 'User successfully registered',
+       ], 200);
+ }
 
-}
-
-//   private function generateToken($user)
-//     {
-//         return $user->createToken('auth-token')->plainTextToken;
-//     }
-
-
-}
-
+ }

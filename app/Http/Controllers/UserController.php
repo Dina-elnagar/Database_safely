@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Http\Controllers\Closure;
+use App\Models\Emergency_contact;
 
 
 
@@ -88,26 +88,6 @@ class UserController extends Controller
         ], 201);
 
 }
-public function login(Request $request)
-{
-
-    $input = $request->only('email', 'password');
-    $jwt_token = null;
-    if (!$jwt_token = JWTAuth::attempt($input)) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Invalid Email or Password',
-        ], 401);
-    }
-    // get the user
-    $user = Auth::user();
-
-    return response()->json([
-        'success' => true,
-        'token' => $jwt_token,
-        'user' => $user
-    ]);
-}
 
 
     protected function createNewToken($token)
@@ -182,11 +162,13 @@ public function login(Request $request)
             'Address' => $request->Address,
           //  'phone_number' => $request->phone_number,
         ]);
+
         // Update the medical case data
         $medicalCaseData  = [
          //   'blood_type' => $request->input('blood_type'),
             'another_health_problem' => $request->input('another_health_problem')
         ];
+
         foreach ($user->Medical_cases as $Medical_case) {
             $Medical_case->update([
              //   'blood_type' => $request->input('blood_type'),
@@ -207,7 +189,7 @@ public function login(Request $request)
 
     // Validate the input data
     $validator = Validator::make($request->all(), [
-        'phone_number' => 'required|string',
+     //   'phone_number' => 'required|string',
         'feedback' => 'nullable|string|min:3|max:255',
 
     ]);
@@ -220,8 +202,8 @@ public function login(Request $request)
     }
 /** */
     // Check if the user with the specified phone number exists
-    $existingUser = User::where('phone_number', $request->input('phone_number'))->first();
-    if (!$existingUser) {
+    //$existingUser = User::where('phone_number', $request->input('phone_number'))->first();
+    if (!$user) {
         return response()->json([
             'message' => 'User not found',
         ], 404);
@@ -243,7 +225,7 @@ DB::table('feedback')->insert([
 ]);
 
 
-    $existingUser->save();
+   // $existingUser->save();
 
     return response()->json([
         'message' => 'thanks for your Feedback',
@@ -251,19 +233,7 @@ DB::table('feedback')->insert([
     ], 200);
 }
 
-public function handle(Request $request, Closure $next)
-{
-    $token = $request->bearerToken();
-    if (!$token) {
-        return response()->json(['message' => 'Unauthorized'], 401);
-    }
 
-    if (!Auth::guard('api')->check()) {
-        return response()->json(['message' => 'Unauthorized'], 401);
-    }
-
-    return $next($request);
-}
        }
 
 

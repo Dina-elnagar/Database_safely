@@ -64,7 +64,6 @@ class RegisterController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'gender'=>$request-> gender,
             'Address' => $request->Address,
-
         ]);
         // car data
         $car = Car::create([
@@ -81,13 +80,13 @@ class RegisterController extends Controller
 
          ]);
             //emergency contact
-         $emergencycontact= Emergency_contact::create([
-            // 'contact_name' => $request->contact_name,
-            // 'phone_number_emergemncy' => $request->phone_number_emergemncy,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone_number' => $request->phone_number,
-        ]);
+      //    $emergencycontact= Emergency_contact::create([
+      //       // 'contact_name' => $request->contact_name,
+      //       // 'phone_number_emergemncy' => $request->phone_number_emergemncy,
+      //       'first_name' => $request->first_name,
+      //       'last_name' => $request->last_name,
+      //       'phone_number' => $request->phone_number,
+      //   ]);
          // user medical data
          User_Car::create([
             'user_id' => $user->id,

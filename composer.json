@@ -6,10 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "fruitcake/laravel-cors": "^2.0.5",
-        "guzzlehttp/guzzle": "^7.5",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "kreait/firebase-php": "^5.26",
         "laravel/framework": "^9.0",
-        "laravel/nexmo-notification-channel": "^3.2",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.2",
@@ -20,9 +20,7 @@
         "phpstan/phpstan-strict-rules": "^1.5",
         "psr/clock": "^1.0",
         "twilio/sdk": "^7.0",
-        "tymon/jwt-auth": "*",
-        "vonage/client": "^4.0",
-        "vonage/client-core": "^4.1"
+        "tymon/jwt-auth": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

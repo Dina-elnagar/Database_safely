@@ -7,12 +7,13 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmergencyContactsController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MessageController;
 use App\Notifications\EmergencyNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 use Illuminate\Notifications\Notification as NotificationsNotification;
+use Kreait\Firebase\Factory;
 
 
 
@@ -80,5 +81,9 @@ use Illuminate\Notifications\Notification as NotificationsNotification;
     // });
 
 
-    
+    //Route::post('/send-notification/{recipientToken}', [MessageController::class, 'sendNotification']);
 
+    Route::post('send-notification/{recipientToken}', function (Request $request, $recipientToken) {
+        $messageController = new MessageController();
+        $messageController->sendNotification($recipientToken);
+    });

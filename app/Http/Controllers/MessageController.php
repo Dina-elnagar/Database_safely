@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-require_once 'vendor/autoload.php';
-
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
-class MessageController {
+class MessageController extends Controller {
     public function sendNotification($recipientToken) {
         // Create a new instance of the Firebase SDK factory
         $factory = (new Factory)
-            ->withServiceAccount('C:\Safely_project\Database_safely\safely-aa7d8-firebase-adminsdk-vy98n-c8334b4408.json')
-            ->withDatabaseUri('https://safely-aa7d8-default-rtdb.firebaseio.com/');
+        ->withServiceAccount('C:\Safely_project\Database_safely\Flutter\google-services.json')
+        ->withDatabaseUri('https://safely-aa7d8-default-rtdb.firebaseio.com/');
 
         // Get the messaging service
         $messaging = $factory->createMessaging();
@@ -36,3 +34,26 @@ class MessageController {
         }
     }
 }
+
+
+
+// class MessageController extends Controller {
+//     public function sendNotification($recipientToken) {
+//         $factory = (new Factory)->withServiceAccount(base_path('google-services.json'));
+//         $messaging = $factory->createMessaging();
+
+//         $notification = Notification::create('Safely', 'Enta kowayes ya 7abibi');
+
+//         $message = CloudMessage::withTarget('token', $recipientToken)
+//         ->withNotification($notification);
+
+//         $result = $messaging->send($message);
+
+//         if ($result->isSuccess()) {
+//             echo 'Notification sent successfully';
+//         } else {
+//             echo 'Failed to send notification: ' . $result->error()->message();
+//         }
+
+//     }
+// }

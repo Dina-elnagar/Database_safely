@@ -83,7 +83,9 @@ use Kreait\Firebase\Factory;
 
     //Route::post('/send-notification/{recipientToken}', [MessageController::class, 'sendNotification']);
 
-    Route::post('send-notification/{recipientToken}', function (Request $request, $recipientToken) {
-        $messageController = new MessageController();
-        $messageController->sendNotification($recipientToken);
-    });
+    // Route::post('send-notification/{recipientToken}', function (Request $request, $recipientToken) {
+    //     $messageController = new MessageController();
+    //     $messageController->sendNotification($recipientToken);
+    // });  
+
+    Route::post('/send-notification', [MessageController::class, 'sendNotification']);

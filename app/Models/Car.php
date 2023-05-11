@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\User;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Car extends Model  implements JWTSubject
+
+class Car extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -25,13 +25,5 @@ class Car extends Model  implements JWTSubject
     }
 
 
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
 
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 }

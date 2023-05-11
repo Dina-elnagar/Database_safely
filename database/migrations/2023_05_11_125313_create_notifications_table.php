@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('emergency_messages', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('message')->default('I am in danger, please help me') ;
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
+           $table->longText('notification');
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('emergency_messages');
+        Schema::dropIfExists('notifications');
     }
 };

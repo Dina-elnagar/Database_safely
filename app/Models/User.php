@@ -10,10 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\Car;
 use App\Models\Medical_case;
-use App\Models\Emergency_contact;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Notification;
 use App\Http\Controllers\JWTAuth;
-
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -69,6 +67,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->BelongsToMany(Medical_case::class,'user_medical_cases');
 
     }
+    public function Notifications()
+    {
+        return $this->belongsToMany(Notification::class,'User_Notifications');
+
+    }
         public function emergency_contacts()
         {
             return $this->belongsToMany(User::class, 'user_users', 'user_id', 'emergency_contact_id')
@@ -87,10 +90,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    // public function routeNotificationForVonage($notification)
-    // {
-    //     return $this->phone_number;
-    // }
+
     public static function checkToken($token){
         if($token->token){
             return true;

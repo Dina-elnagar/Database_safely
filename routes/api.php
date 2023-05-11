@@ -7,13 +7,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmergencyContactsController;
-use App\Http\Controllers\MessageController;
-use App\Notifications\EmergencyNotification;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
-use App\Models\User;
-use Illuminate\Notifications\Notification as NotificationsNotification;
-use Kreait\Firebase\Factory;
+use App\Http\Controllers\NotificationController;
 
 
 
@@ -52,8 +46,6 @@ use Kreait\Firebase\Factory;
     Route::get('carShow',[CarController::class,'carShow']);
 
    //emergency contacts routes
-    //    Route::post('enter_emergency_contact', [EmergencyContactsController::class, 'store']); //store array of emergency contacts
-    //   Route::post('store_emergency_contact', [EmergencyContactsController::class, 'store_emergency_contact']); //store one emergency contact
   Route::post('insert', [EmergencyContactsController::class, 'addEmergencyContact']);
   Route::delete('emergency-contact-delete',[EmergencyContactsController::class,'delete']);
   Route::get('emergency-contacts-show', [EmergencyContactsController::class, 'show']);
@@ -62,30 +54,6 @@ use Kreait\Firebase\Factory;
     Route::post('feedback',[UserController::class,'feedback']);
 
     //notification routes
-    //Route::post('message', [EmergencyContactsController::class, 'messages']);
-   // Route::Get('SendSms', [NotificationController::class, 'SendSms']);
-
-    // Route::Post('sendEmergencyMessage', [NotificationController::class, 'sendEmergencyMessage']);
-    // Route::get('/send-emergency-notification', function () {
-    //     $user = Auth::user();
-    //     $emergencyContacts = $user->emergencyContacts;
-    //     if (!$emergencyContacts) {
-    //         return response()->json(['message' => 'Emergency contact not found'], 404);
-    //     }
-    //     foreach ($emergencyContacts as $emergencyContact) {
-    //         $emergencyContact->notify(new EmergencyNotification);
-    //     }
-    //     return response()->json([
-    //         'message' => 'Emergency notification sent successfully',
-    //     ]);
-    // });
-
-
-    //Route::post('/send-notification/{recipientToken}', [MessageController::class, 'sendNotification']);
-
-    // Route::post('send-notification/{recipientToken}', function (Request $request, $recipientToken) {
-    //     $messageController = new MessageController();
-    //     $messageController->sendNotification($recipientToken);
-    // });  
-
-    Route::post('/send-notification', [MessageController::class, 'sendNotification']);
+    Route::post('Store_Notify',[NotificationController::class,'Store']);
+    Route::get('Show_Notify',[NotificationController::class,'Show']);
+    Route::delete('delete_Notify',[NotificationController::class,'delete']);

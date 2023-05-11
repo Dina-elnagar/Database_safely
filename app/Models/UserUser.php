@@ -14,4 +14,5 @@ class UserUser extends Model
         'relationship',
     'created_at',
     'updated_at',];
+    
 }

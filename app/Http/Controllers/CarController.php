@@ -153,6 +153,7 @@ class CarController extends Controller
                 'message' => 'car deleted successfully',
             ]);
         }
+        
     }
 
 

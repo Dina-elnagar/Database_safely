@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade');
             $table->primary(['user_id', 'emergency_contact_id', 'notification_id']);
             $table->timestamp('created_at')->useCurrent();
-
+            $table->timestamp('updated_at')->useCurrent();
 
         });
     }

@@ -5,8 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserUser;
 use App\Models\User;
-use App\Models\Emergency_message;
-use App\Models\User_emergency_message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -14,33 +12,38 @@ use Illuminate\Support\Facades\DB;
 class EmergencyContactsController extends Controller
 {
 
-public function addEmergencyContact(Request $request)
-{
-    $user = Auth::user(); // Get the authenticated user
+    public function addEmergencyContact(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
 
-    // Validate the incoming data
-    $validator = Validator::make($request->all(), [
-        'phone_number' => 'required|digits:11', // assuming phone numbers are 10 digits
-        'relationship' => 'required|string|max:255',
-    ]);
+        $user = Auth::user(); // Get the authenticated user
 
-    if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 400);
+        // Validate the incoming data
+        $validator = Validator::make($request->all(), [
+            'phone_number' => 'required|digits:11', // assuming phone numbers are 11 digits
+            'relationship' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        // Find the emergency contact user by their phone number
+        $emergencyContact = User::where('phone_number', $request->phone_number)->first();
+
+        if (!$emergencyContact) {
+            return response()->json(['error' => 'Emergency contact not found'], 404);
+        }
+
+        // Attach the emergency contact to the user
+        $user->emergency_contacts()->attach($emergencyContact->id, ['relationship' => $request->relationship]);
+
+        // Return a success response
+        return response()->json(['message' => 'Emergency contact added successfully'], 200);
     }
 
-    // Find the emergency contact user by their phone number
-    $emergencyContact = User::where('phone_number', $request->phone_number)->first();
-
-    if (!$emergencyContact) {
-        return response()->json(['error' => 'Emergency contact not found'], 404);
-    }
-
-    // Attach the emergency contact to the user
-    $user->emergency_contacts()->attach($emergencyContact->id, ['relationship' => $request->relationship]);
-
-    // Return a success response
-    return response()->json(['message' => 'Emergency contact added successfully'], 200);
-}
 
 
 public function show(Request $request)

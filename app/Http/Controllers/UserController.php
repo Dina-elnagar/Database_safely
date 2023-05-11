@@ -149,7 +149,7 @@ class UserController extends Controller
             'last_name' => 'required|string',
             'Address' => 'required|string',
            // 'phone_number' => 'required',
-           // 'blood_type' => 'required|string',
+            'blood_type' => 'required|string',
             'another_health_problem' => 'required|string',
         ]);
 
@@ -165,13 +165,13 @@ class UserController extends Controller
 
         // Update the medical case data
         $medicalCaseData  = [
-         //   'blood_type' => $request->input('blood_type'),
+            'blood_type' => $request->input('blood_type'),
             'another_health_problem' => $request->input('another_health_problem')
         ];
 
         foreach ($user->Medical_cases as $Medical_case) {
             $Medical_case->update([
-             //   'blood_type' => $request->input('blood_type'),
+               'blood_type' => $request->input('blood_type'),
                 'another_health_problem' => $request->input('another_health_problem')
             ]) ;
         }
